@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pdv_patrick/src/models/product.dart';
+import 'package:pdv_patrick/src/models/shopping_cart.dart';
+import 'package:pdv_patrick/src/pages/cart_page.dart';
+import 'package:pdv_patrick/src/pages/product_page.dart';
 import 'package:pdv_patrick/src/pages/register_product_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,6 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Product> lProducts = <Product>[
     Product(
+      id: DateTime.now().millisecondsSinceEpoch,
       name: 'Anel',
       description: "apenas um anel",
       image:
@@ -19,6 +23,7 @@ class _HomePageState extends State<HomePage> {
       price: 450,
     ),
     Product(
+      id: DateTime.now().millisecondsSinceEpoch + 1,
       name: 'Iphone',
       description: "Iphone XE",
       image:
@@ -27,12 +32,14 @@ class _HomePageState extends State<HomePage> {
     ),
   ];
 
+  var myCart = ShoppingCart(cartProducts: []);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("PDV", style: TextStyle(color: Color(0xFFFAFFCA))),
         backgroundColor: Color(0xFF5A827E),
-        leading: Icon(Icons.menu, color: Color(0xFFFAFFCA)),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -52,35 +59,72 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Color(0xFF5A827E),
         child: Icon(Icons.add, color: Color(0xFFFAFFCA)),
       ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              backgroundColor: const Color(0xFF5A827E),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartPage(shoppingCart: myCart),
+                ),
+              );
+            },
+            child: const Text(
+              "Ver carrinho",
+              style: TextStyle(fontSize: 16, color: Colors.white),
+            ),
+          ),
+        ),
+      ),
       body: Column(
         children: [
-          ListView.builder(
-            itemCount: lProducts.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              var product = lProducts[index];
+          Expanded(
+            child: ListView.builder(
+              itemCount: lProducts.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                var product = lProducts[index];
 
-              return Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      color: Color(0xFFB9D4AA),
-                      child: InkWell(
-                        onTap: () {},
-                        child: ListTile(
-                          title: Text(product.name),
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              product.image,
-                            ), // ou AssetImage
+                return Row(
+                  children: [
+                    Expanded(
+                      child: Card(
+                        color: Color(0xFFB9D4AA),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductPage(
+                                  product: product,
+                                  onAddCart: (product) {
+                                    myCart.addProduct(product);
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            title: Text(product.name),
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                product.image,
+                              ), // ou AssetImage
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            },
+                  ],
+                );
+              },
+            ),
           ),
         ],
       ),

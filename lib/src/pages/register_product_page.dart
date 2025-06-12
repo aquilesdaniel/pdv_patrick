@@ -24,9 +24,8 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFF5A827E),
-          leading: Icon(Icons.menu, color: Color(0xFFFAFFCA)),
           title: Text(
-            "Cadastrar Produto !",
+            "Cadastrar Produto",
             style: TextStyle(color: Color(0xFFFAFFCA)),
           ),
         ),
@@ -84,6 +83,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                           var price = double.parse(txtValor.text);
 
                           var product = Product(
+                            id: DateTime.now().millisecondsSinceEpoch,
                             name: txtName.text,
                             description: txtDescription.text,
                             image: "https://i.imgur.com/gmOtPQ7.png",

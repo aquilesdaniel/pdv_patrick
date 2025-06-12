@@ -7,6 +7,10 @@ class PdvPatrick extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: "PDV", home: HomePage(), debugShowCheckedModeBanner: false);
+    return MaterialApp(
+      title: "PDV",
+      home: HomePage(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
